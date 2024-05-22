@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: empms-db
+  name: empms-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: empms-db
+  template:
+    metadata:
+      labels:
+        app: empms-db
+    spec:
+      containers:
+      - image: kaifshakeel/empms-db:1.0
+        name: empms-db
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: attendancedb
+        - name: MYSQL_USERNAME
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "password"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: empms-db
+spec:
+  type: ClusterIP
+  selector:
+    app: empms-db
+  ports:
+  - protocol: TCP
+    port: 3306

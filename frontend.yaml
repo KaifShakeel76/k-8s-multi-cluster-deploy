@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: empms-frontend
+  name: empms-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: empms-frontend
+  template:
+    metadata:
+      labels:
+        app: empms-frontend
+    spec:
+      containers:
+      - image: kaifshakeel/empms-frontend:1.0
+        name: empms-frontend
+        ports:
+        - containerPort: 3000
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: empms-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: empms-frontend
+  ports:
+  - protocol: TCP
+    port: 3000

@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: empms-attendance
+  name: empms-attendance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: empms-attendance
+  template:
+    metadata:
+      labels:
+        app: empms-attendance
+    spec:
+      containers:
+      - image: kaifshakeel/empms-attendance:1.0
+        name: empms-attendance
+        ports:
+        - containerPort: 8081
+        env:
+        - name: MYSQL_ENABLED
+          value: "true"
+        - name: MYSQL_HOST
+          value: "empms-db:3306"
+        - name: MYSQL_DATABASE
+          value: attendancedb
+        - name: MYSQL_USERNAME
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "password"
+        - name: MYSQL_API_PORT
+          value: "8081"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: empms-attendance
+spec:
+  type: ClusterIP
+  selector:
+    app: empms-attendance
+  ports:
+  - protocol: TCP
+    port: 8081

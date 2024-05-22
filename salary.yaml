@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: empms-salary
+  name: empms-salary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: empms-salary
+  template:
+    metadata:
+      labels:
+        app: empms-salary
+    spec:
+      containers:
+      - image: kaifshakeel/empms-salary:1.0
+        imagePullPolicy: Always
+        name: empms-salary
+        ports:
+        - containerPort: 8082
+        env:
+        - name: ELASTICSEARCH_ENABLED
+          value: "true"
+        - name: ELASTICSEARCH_HOST
+          value: "empms-es:9200"
+        - name: ELASTICSEARCH_USERNAME
+          value: "elastic"
+        - name: ELASTICSEARCH_PASSWORD
+          value: "elastic"
+        - name: SALARY_API_PORT
+          value: "8082"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: empms-salary
+spec:
+  ports:
+  - port: 8082
+  selector:
+    app: empms-salary
